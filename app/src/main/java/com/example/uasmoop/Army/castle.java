@@ -7,12 +7,11 @@ public class castle {
 	protected ArrayList<soldier> armyList = new ArrayList();
 	protected ArrayList<hero> heroList = new ArrayList();
 	protected double sum;
+	protected double CastleStat;
 
 	public double getCastleStat() {
 		return CastleStat;
 	}
-
-	protected double CastleStat;
 	
 	public castle(String name, String type) {
 		this.name = name;
@@ -41,7 +40,8 @@ public class castle {
 		int totalInfH = 0;
 		int totalCatH = 0;
 		int totalArchH = 0;
-		
+
+		//Calculating castle-type boost
 		switch (ntype) {
 			case "wood" :
 				for (soldier army : armyList) {
@@ -53,7 +53,7 @@ public class castle {
 			case "steel" :
 				for (soldier army : armyList) {
 					if (army.category == "Infantry") {
-						army.skillbonus = Math.floor(army.skillbonus + army.skillbonus*0.2);
+						army.skillbonus = Math.floor(army.skillbonus + army.skillbonus*0.3);
 					}
 				}
 				break;
@@ -72,7 +72,8 @@ public class castle {
 				}
 				break;
 		}
-		
+
+		//Calculating total hero on one player
 		for (hero Hero : heroList) {
 			if (Hero.name.equals("Archer Hero")){
 				totalArchH +=1;
@@ -88,12 +89,18 @@ public class castle {
 			}
 		}
 
-		
+		//Calculating Hero boost
 		for (hero Hero : heroList) {
 			if (Hero.name.contains("Archer Hero")){
 				for (soldier army : armyList) {
 					if (army.category == "Archer") {
 						army.atkstat = Math.floor(army.atkstat+(army.atkstat*0.4));
+					}
+					else if (army.category == "Cavalry") {
+						army.atkstat = Math.floor(army.atkstat-(army.atkstat*0.1));
+					}
+					else if (army.category == "Infantry") {
+						army.atkstat = Math.floor(army.atkstat-(army.atkstat*0.1));
 					}
 				}
 			}
@@ -102,12 +109,18 @@ public class castle {
 					if (army.category == "Cavalry") {
 						army.atkstat = Math.floor(army.atkstat+(army.atkstat*0.4));
 					}
+					else if (army.category == "Catapult") {
+						army.atkstat = Math.floor(army.atkstat-(army.atkstat*0.1));
+					}
 				}
 			}
 			if (Hero.name.contains("Catapult Hero")){
 				for (soldier army : armyList) {
 					if (army.category == "Catapult") {
 						army.atkstat = Math.floor(army.atkstat+(army.atkstat*0.4));
+					}
+					else if (army.category == "Infantry") {
+						army.atkstat = Math.floor(army.atkstat-(army.atkstat*0.1));
 					}
 				}
 			}
@@ -116,28 +129,16 @@ public class castle {
 					if (army.category == "Infantry") {
 						army.atkstat = Math.floor(army.atkstat+(army.atkstat*0.4));
 					}
+					else if (army.category == "Archer") {
+						army.atkstat = Math.floor(army.atkstat-(army.atkstat*0.1));
+					}
 				}
 			}
 		}
-
-		System.out.println("Castle name : " + name + " | " + "Type : " + " " + type + "\n"); 
-		System.out.println("----------- ARMY LIST ---------------");
-		System.out.println();
-		if(totalCatH > 0) {
-			System.out.println("Catapult Hero : " + totalCatH);
-		}
-		if(totalCavH > 0) {
-			System.out.println("Cavalry Hero : " + totalCavH);
-		}
-		if(totalInfH > 0) {
-			System.out.println("Infantry Hero : " + totalInfH);
-		}
-		if(totalArchH > 0) {
-			System.out.println("Archer Hero : " + totalArchH);
-		}
+		//Totalling attack stat for one castle
 		sum = 0;
 		for (soldier army : armyList) {
-			sum = sum + army.atkstat;
+			sum = sum + Math.floor(((army.atkstat + army.skillbonus)*0.1) * (0.001 * army.size));
 		}
 		CastleStat = sum;
 	}
